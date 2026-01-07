@@ -325,22 +325,22 @@ const filteredAndSortedData = useMemo(() => {
       </TableHead>
 
       <TableHead className="text-blue-700 font-semibold">Status</TableHead>
+
+        <TableHead
+        className="cursor-pointer select-none hover:bg-blue-50 text-blue-700 font-semibold"
+        onClick={() => handleSort("state")}
+      >
+        <div className="flex items-center gap-1">
+          State
+          {getSortIcon("state")}
+        </div>
+      </TableHead>
+
     </TableRow>
 
+   </TableHeader>
 
-    <TableHead
-  className="cursor-pointer select-none hover:bg-blue-50 text-blue-700 font-semibold"
-  onClick={() => handleSort("state")}
->
-  <div className="flex items-center gap-1">
-    State
-    {getSortIcon("state")}
-  </div>
-</TableHead>
-
-  </TableHeader>
-
-  <TableBody>
+  {/* <TableBody>
     {filteredAndSortedData.slice(0, 50).map((record, index) => (
       <TableRow
         key={record.id}
@@ -408,7 +408,46 @@ const filteredAndSortedData = useMemo(() => {
 
       </TableRow>
     ))}
-  </TableBody>
+  </TableBody> */}
+
+<TableBody>
+  {filteredAndSortedData.map((record, index) => (
+    <TableRow
+      key={record.id}
+      className={`hover:bg-blue-50 transition-colors ${index % 2 === 0 ? "bg-white" : "bg-[#f9fbff]"}`}
+    >
+      <TableCell className="font-medium text-gray-700">{record.date}</TableCell>
+      <TableCell>
+        <Badge variant="outline" className="font-mono text-xs border-blue-300 text-blue-700">
+          {record.rating}
+        </Badge>
+      </TableCell>
+      <TableCell className="font-mono text-sm text-gray-700">{record.serialNumber}</TableCell>
+      <TableCell className="max-w-[250px] truncate text-sm text-gray-700" title={record.issue}>{record.issue}</TableCell>
+      <TableCell className="max-w-[180px] truncate text-sm text-gray-700" title={record.customer}>{record.customer}</TableCell>
+      <TableCell className="text-sm text-gray-700 font-semibold">{record.engineer}</TableCell>
+      <TableCell>
+        {record.status && (
+          <Badge
+            className={`text-xs px-2 py-1 border ${
+              record.status.toLowerCase().includes("done")
+                ? "bg-blue-600 text-white border-blue-700"
+                : record.status.toLowerCase().includes("pending")
+                ? "bg-yellow-200 text-yellow-800 border-yellow-300"
+                : "bg-gray-100 text-gray-700 border-gray-300"
+            }`}
+          >
+            {record.status.slice(0, 20)}
+            {record.status.length > 20 ? "..." : ""}
+          </Badge>
+        )}
+      </TableCell>
+      <TableCell className="text-sm text-gray-700 font-semibold">{record.state}</TableCell>
+    </TableRow>
+  ))}
+</TableBody>
+
+
 </Table>
 
         </div>
