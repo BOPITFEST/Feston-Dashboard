@@ -1,12 +1,15 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
 import { PrismaClient } from "@prisma/client";
+import dotenv from "dotenv";
 
 const prisma = new PrismaClient();
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+dotenv.config();
 
 // Fetch all replacements
 app.get("/api/replacements", async (req: Request, res: Response) => {
@@ -44,8 +47,15 @@ app.get(
   }
 );
 
-const PORT = Number(process.env.PORT) || 5000;
+const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:5000";
+let port: number;
+try {
+  const parsed = new URL(BACKEND_URL);
+  port = Number(parsed.port) || Number(process.env.PORT) || 5000;
+} catch (err) {
+  port = Number(process.env.PORT) || 5000;
+}
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+app.listen(port, () => {
+  console.log(`🚀 Server running at ${BACKEND_URL} (listening on port ${port})`);
 });
