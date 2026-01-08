@@ -44,7 +44,8 @@ app.get(
   }
 );
 
-const PORT = process.env.PORT || 5000;
+
+const PORT = Number(process.env.PORT) || 5000;
 const HOST = process.env.HOST || "0.0.0.0";
 const PUBLIC_URL = process.env.PUBLIC_URL || `http://${HOST}:${PORT}`;
 
