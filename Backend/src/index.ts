@@ -44,8 +44,10 @@ app.get(
   }
 );
 
-const PORT = (process.env.PORT) || 5000;
+const PORT = process.env.PORT || 5000;
+const HOST = process.env.HOST || "0.0.0.0";
+const PUBLIC_URL = process.env.PUBLIC_URL || `http://${HOST}:${PORT}`;
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
+app.listen(PORT, HOST, () => {
+  console.log(`🚀 Server running on ${PUBLIC_URL}`);
 });
