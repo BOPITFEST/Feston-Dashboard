@@ -7,7 +7,7 @@ import { EngineerChart } from "@/components/dashboard/EngineerChart";
 import { TrendChart } from "@/components/dashboard/TrendChart";
 import { RatingChart } from "@/components/dashboard/RatingChart";
 import {
-  parseCSVData,
+  // parseCSVData,
   getIssueCategories,
   getEngineerStats,
   getRatingStats,
