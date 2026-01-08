@@ -1,0 +1,11 @@
+{
+  "name": "fe-replacement-monorepo",
+  "private": true,
+  "workspaces": ["Backend", "Frontend"],
+  "scripts": {
+    "install:all": "npm --prefix Backend install && npm --prefix Frontend install",
+    "build:all": "npm --prefix Backend run build && npm --prefix Frontend run build",
+    "start:backend": "npm --prefix Backend start",
+    "start:frontend": "npm --prefix Frontend start"
+  }
+}
