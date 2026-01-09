@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { Zap, AlertTriangle, Wrench, Users } from "lucide-react";
+import { Package } from "lucide-react";
 import { KPICard } from "@/components/dashboard/KPICard";
 import { DataTable } from "@/components/dashboard/DataTable";
 import { IssueChart } from "@/components/dashboard/IssueChart";
@@ -34,36 +35,40 @@ useEffect(() => {
   load();
 }, []);
 
+const stats = useMemo(() => {
+  if (!data.length) return null;
 
-  const stats = useMemo(() => {
-    if (!data.length) return null;
+  const issueCategories = getIssueCategories(data);
+  const engineerStats = getEngineerStats(data);
+  const ratingStats = getRatingStats(data);
+  const monthlyTrend = getMonthlyTrend(data);
 
-    const issueCategories = getIssueCategories(data);
-    const engineerStats = getEngineerStats(data);
-    const ratingStats = getRatingStats(data);
-    const monthlyTrend = getMonthlyTrend(data);
+  const pendingCount = data.filter(
+    (r) => r.status?.trim().toLowerCase() === "open"
+  ).length;
 
-    const pendingCount = data.filter((r) =>
-      r.status.toLowerCase().includes("pending")
-    ).length;
+  const completedCount = data.filter(
+    (r) => r.status?.trim().toLowerCase() === "close"
+  ).length;
 
-    const completedCount = data.filter(
-      (r) =>
-        r.status.toLowerCase().includes("done") ||
-        r.status.toLowerCase().includes("replaced")
-    ).length;
+  const spareServiceCount = data.filter(
+    (r) => r.status?.trim().toLowerCase() === "spare service"
+  ).length;
 
-    return {
-      total: data.length,
-      pending: pendingCount,
-      completed: completedCount,
-      uniqueEngineers: engineerStats.length,
-      issueCategories,
-      engineerStats,
-      ratingStats,
-      monthlyTrend,
-    };
-  }, [data]);
+  return {
+    total: data.length,
+    pending: pendingCount,
+    completed: completedCount,
+    spareService: spareServiceCount,
+    uniqueEngineers: engineerStats.length,
+    issueCategories,
+    engineerStats,
+    ratingStats,
+    monthlyTrend,
+  };
+}, [data]);
+
+
 
   if (!stats) {
     return (
@@ -98,11 +103,9 @@ useEffect(() => {
   </div>
 </header>
 
-
-
       <main className="container mx-auto space-y-6 px-4 py-6">
         {/* KPI Cards */}
-<section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+{/* <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
   <KPICard
     title="Total Replacements"
     value={stats.total}
@@ -130,8 +133,44 @@ useEffect(() => {
     icon={Users}
     iconClassName="bg-indigo-100 text-indigo-600"
   />
-</section>
+</section> */}
 
+<section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+  <KPICard
+    title="Total Replacements"
+    value={stats.total}
+    icon={Zap}
+    iconClassName="bg-blue-100 text-blue-600"
+  />
+
+  <KPICard
+    title="Pending"
+    value={stats.pending}
+    icon={AlertTriangle}
+    iconClassName="bg-orange-100 text-orange-600"
+  />
+
+  <KPICard
+    title="Completed"
+    value={stats.completed}
+    icon={Wrench}
+    iconClassName="bg-green-100 text-green-600"
+  />
+
+  <KPICard
+    title="Spare Service"
+    value={stats.spareService}
+    icon={Package}
+    iconClassName="bg-purple-100 text-purple-600"
+  />
+
+  <KPICard
+    title="Active Engineers"
+    value={stats.uniqueEngineers}
+    icon={Users}
+    iconClassName="bg-indigo-100 text-indigo-600"
+  />
+</section>
 
         {/* Trend Chart */}
         <TrendChart data={stats.monthlyTrend} />

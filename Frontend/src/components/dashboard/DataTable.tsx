@@ -193,6 +193,24 @@ const filteredAndSortedData = useMemo(() => {
 
   const hasActiveFilters = searchTerm || ratingFilter !== "all" || engineerFilter !== "all";
 
+  const getStatusBadgeClass = (status: string) => {
+  const normalized = status.trim().toLowerCase();
+
+    if (normalized === "close") {
+      return "bg-green-100 text-green-800 border-green-300";
+    }
+
+    if (normalized === "open") {
+      return "bg-red-100 text-red-800 border-red-300";
+    }
+
+    if (normalized === "spare service") {
+      return "bg-yellow-100 text-yellow-800 border-yellow-300";
+    }
+
+    return "bg-gray-100 text-gray-700 border-gray-300";
+  };
+
   return (
     <Card>
       <CardHeader className="pb-4">
@@ -341,76 +359,6 @@ const filteredAndSortedData = useMemo(() => {
 
    </TableHeader>
 
-  {/* <TableBody>
-    {filteredAndSortedData.slice(0, 50).map((record, index) => (
-      <TableRow
-        key={record.id}
-        className={`
-          hover:bg-blue-50 transition-colors
-          ${index % 2 === 0 ? "bg-white" : "bg-[#f9fbff]"}
-        `}
-      >
-        <TableCell className="font-medium text-gray-700">{record.date}</TableCell>
-
-        <TableCell>
-          <Badge
-            variant="outline"
-            className="font-mono text-xs border-blue-300 text-blue-700"
-          >
-            {record.rating}
-          </Badge>
-        </TableCell>
-
-        <TableCell className="font-mono text-sm text-gray-700">
-          {record.serialNumber}
-        </TableCell>
-
-        <TableCell
-          className="max-w-[250px] truncate text-sm text-gray-700"
-          title={record.issue}
-        >
-          {record.issue}
-        </TableCell>
-
-        <TableCell
-          className="max-w-[180px] truncate text-sm text-gray-700"
-          title={record.customer}
-        >
-          {record.customer}
-        </TableCell>
-
-        <TableCell className="text-sm text-gray-700 font-semibold">
-          {record.engineer}
-        </TableCell>
-
-        <TableCell>
-          {record.status && (
-            <Badge
-              className={`
-                text-xs px-2 py-1 border
-                ${
-                  record.status.toLowerCase().includes("done")
-                    ? "bg-blue-600 text-white border-blue-700"
-                    : record.status.toLowerCase().includes("pending")
-                    ? "bg-yellow-200 text-yellow-800 border-yellow-300"
-                    : "bg-gray-100 text-gray-700 border-gray-300"
-                }
-              `}
-            >
-              {record.status.slice(0, 20)}
-              {record.status.length > 20 ? "..." : ""}
-            </Badge>
-          )}
-        </TableCell>
-
-        <TableCell className="text-sm text-gray-700 font-semibold">
-          {record.state}
-        </TableCell>
-
-      </TableRow>
-    ))}
-  </TableBody> */}
-
 <TableBody>
   {filteredAndSortedData.map((record, index) => (
     <TableRow
@@ -430,16 +378,9 @@ const filteredAndSortedData = useMemo(() => {
       <TableCell>
         {record.status && (
           <Badge
-            className={`text-xs px-2 py-1 border ${
-              record.status.toLowerCase().includes("done")
-                ? "bg-blue-600 text-white border-blue-700"
-                : record.status.toLowerCase().includes("pending")
-                ? "bg-yellow-200 text-yellow-800 border-yellow-300"
-                : "bg-gray-100 text-gray-700 border-gray-300"
-            }`}
+            className={`text-xs px-2 py-1 border ${getStatusBadgeClass(record.status)}`}
           >
-            {record.status.slice(0, 20)}
-            {record.status.length > 20 ? "..." : ""}
+            {record.status}
           </Badge>
         )}
       </TableCell>
@@ -454,7 +395,7 @@ const filteredAndSortedData = useMemo(() => {
         </div>
         {filteredAndSortedData.length > 50 && (
           <div className="border-t px-6 py-3 text-center text-sm text-muted-foreground">
-            Showing first 50 of {filteredAndSortedData.length} records
+             {filteredAndSortedData.length}
           </div>
         )}
       </CardContent>
