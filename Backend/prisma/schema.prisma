@@ -7,19 +7,48 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// model Replacement {
+//   id                     Int      @id @default(autoincrement())
+//   date                   DateTime
+//   rating                 String   @db.VarChar(50)
+//   serialNumber            String   @unique
+//   type                   String?  @db.VarChar(20)
+//   issue                  String   @db.Text
+//   replacementSerialNumber String?  @db.VarChar(50)
+//   state                  String   @db.VarChar(50)
+//   customer               String?  @db.VarChar(100)
+//   engineer               String?  @db.VarChar(100)
+//   remark                 String?  @db.Text
+//   status                 String   @default("OPEN")
+//   createdAt              DateTime @default(now())
+//   updatedAt              DateTime @updatedAt
+// }
+
 model Replacement {
-  id                     Int      @id @default(autoincrement())
-  date                   DateTime
-  rating                 String   @db.VarChar(50)
-  serialNumber            String   @unique
-  type                   String?  @db.VarChar(20)
-  issue                  String   @db.Text
-  replacementSerialNumber String?  @db.VarChar(50)
-  state                  String   @db.VarChar(50)
-  customer               String?  @db.VarChar(100)
-  engineer               String?  @db.VarChar(100)
-  remark                 String?  @db.Text
-  status                 String   @default("OPEN")
-  createdAt              DateTime @default(now())
-  updatedAt              DateTime @updatedAt
+  id                       Int      @id @default(autoincrement())
+
+  // Sheet columns
+  date                     DateTime
+  rating                   String   @db.VarChar(50)
+  faultySerialNumber String? @db.VarChar(100)
+  type                     String?  @db.VarChar(20) // FG / FM
+  issue                    String   @db.Text
+  replacementSerialNumber  String?  @db.VarChar(100)
+
+  status                   String   @db.VarChar(20) // OPEN / CLOSE / SPARE
+  state                    String   @db.VarChar(50)
+  customer                 String?  @db.VarChar(150)
+  engineer                 String?  @db.VarChar(100)
+
+  stockType                String?  @db.VarChar(50) // Sales Stock / Service Spare
+  additionalComments       String?  @db.Text
+  remark                   String?  @db.Text
+
+  // System columns
+  createdAt                DateTime @default(now())
+  updatedAt                DateTime @updatedAt
+
+  @@index([faultySerialNumber])
+  @@index([status])
+  @@index([state])
 }

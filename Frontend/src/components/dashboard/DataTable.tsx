@@ -99,16 +99,17 @@ const filteredAndSortedData = useMemo(() => {
   let result = [...data];
 
   // 1️⃣ Apply search filter
-  if (searchTerm) {
+    if (searchTerm) {
     const term = searchTerm.toLowerCase();
     result = result.filter(
       (record) =>
-        record.serialNumber.toLowerCase().includes(term) ||
+        record.faultySerialNumber.toLowerCase().includes(term) ||
         record.issue.toLowerCase().includes(term) ||
         record.customer.toLowerCase().includes(term) ||
         record.engineer.toLowerCase().includes(term)
     );
   }
+
 
   // 2️⃣ Apply state filter
   if (stateFilter && stateFilter !== "all") {
@@ -294,11 +295,11 @@ const filteredAndSortedData = useMemo(() => {
 
       <TableHead
         className="cursor-pointer select-none hover:bg-blue-50 text-blue-700 font-semibold"
-        onClick={() => handleSort("serialNumber")}
+        onClick={() => handleSort("faultySerialNumber")}
       >
         <div className="flex items-center gap-1">
-          Serial No
-          {getSortIcon("serialNumber")}
+          Faulty Serial No
+          {getSortIcon("faultySerialNumber")}
         </div>
       </TableHead>
 
@@ -422,7 +423,7 @@ const filteredAndSortedData = useMemo(() => {
           {record.rating}
         </Badge>
       </TableCell>
-      <TableCell className="font-mono text-sm text-gray-700">{record.serialNumber}</TableCell>
+      <TableCell className="font-mono text-sm text-gray-700">{record.faultySerialNumber}</TableCell>
       <TableCell className="max-w-[250px] truncate text-sm text-gray-700" title={record.issue}>{record.issue}</TableCell>
       <TableCell className="max-w-[180px] truncate text-sm text-gray-700" title={record.customer}>{record.customer}</TableCell>
       <TableCell className="text-sm text-gray-700 font-semibold">{record.engineer}</TableCell>

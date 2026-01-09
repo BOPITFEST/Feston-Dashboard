@@ -1,80 +1,100 @@
 export function mapDbToReplacementRecord(db: any[]): ReplacementRecord[] {
   return db.map((r, index) => ({
     id: r.id ?? index + 1,
-    date: r.date
-      ? new Date(r.date).toLocaleDateString("en-GB")
-      : "",
+    date: r.date ? new Date(r.date).toLocaleDateString("en-GB") : "",
     rating: r.rating || "",
-    serialNumber: r.serialNumber || "",
+    faultySerialNumber: r.faultySerialNumber || "",
+    type: r.type || "",
     issue: r.issue || "",
     replacementSN: r.replacementSerialNumber || "",
     customer: r.customer || "",
     engineer: r.engineer || "",
     status: r.status || "OPEN",
     state: r.state || "",
+    stockType: r.stockType || "",
+    additionalComments: r.additionalComments || "",
+    remark: r.remark || "",
   }));
 }
+
 
 
 export interface ReplacementRecord {
   id: number;
   date: string;
   rating: string;
-  serialNumber: string;
+  faultySerialNumber: string;
   issue: string;
   replacementSN: string;
   customer: string;
   engineer: string;
   status: string;
   state: string;
+  stockType: string;
+  additionalComments: string;
+  remark: string;
 }
 
+
 export function parseCSVData(csvText: string): ReplacementRecord[] {
-  const lines = csvText.split('\n').slice(3); // Skip header rows
+  const lines = csvText.split("\n").slice(3);
   const records: ReplacementRecord[] = [];
 
   lines.forEach((line, index) => {
     if (!line.trim()) return;
 
-    // Handle CSV parsing with quotes
     const columns: string[] = [];
-    let current = '';
+    let current = "";
     let inQuotes = false;
 
     for (let i = 0; i < line.length; i++) {
       const char = line[i];
-      if (char === '"') {
-        inQuotes = !inQuotes;
-      } else if (char === ',' && !inQuotes) {
+      if (char === '"') inQuotes = !inQuotes;
+      else if (char === "," && !inQuotes) {
         columns.push(current.trim());
-        current = '';
-      } else {
-        current += char;
-      }
+        current = "";
+      } else current += char;
     }
     columns.push(current.trim());
 
-    const [date, rating, serialNumber, issue, replacementSN, customer, engineer, status, state] = columns;
-
+    const [
+      date,
+      rating,
+      faultySerialNumber,
+      _type,
+      issue,
+      replacementSN,
+      status,
+      state,
+      customer,
+      engineer,
+      stockType,
+      additionalComments,
+      remark
+    ] = columns;
 
     if (date && rating) {
       records.push({
         id: index + 1,
-        date: date || '',
-        rating: rating || '',
-        serialNumber: serialNumber || '',
-        issue: issue || '',
-        replacementSN: replacementSN || '',
-        customer: customer || '',
-        engineer: engineer || '',
-        status: status || '',
-        state: state || '',
+        date: date || "",
+        rating: rating || "",
+        faultySerialNumber: faultySerialNumber || "",
+        issue: issue || "",
+        replacementSN: replacementSN || "",
+        customer: customer || "",
+        engineer: engineer || "",
+        status: status || "",
+        state: state || "",
+        stockType: stockType || "",
+        additionalComments: additionalComments || "",
+        remark: remark || "",
       });
     }
   });
 
   return records;
 }
+
 
 export function getUniqueValues(records: ReplacementRecord[], field: keyof ReplacementRecord): string[] {
   const values = new Set<string>();
