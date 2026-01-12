@@ -104,6 +104,7 @@ const filteredAndSortedData = useMemo(() => {
     result = result.filter(
       (record) =>
         record.faultySerialNumber.toLowerCase().includes(term) ||
+        record.replacementSN.toLowerCase().includes(term) || // ✅ ADD THIS
         record.issue.toLowerCase().includes(term) ||
         record.customer.toLowerCase().includes(term) ||
         record.engineer.toLowerCase().includes(term)
@@ -343,6 +344,16 @@ const filteredAndSortedData = useMemo(() => {
         </div>
       </TableHead>
 
+      <TableHead
+  className="cursor-pointer select-none hover:bg-blue-50 text-blue-700 font-semibold"
+  onClick={() => handleSort("replacementSN")}
+>
+  <div className="flex items-center gap-1">
+    Replacement Serial No
+    {getSortIcon("replacementSN")}
+  </div>
+</TableHead>
+
       <TableHead className="text-blue-700 font-semibold">Status</TableHead>
 
         <TableHead
@@ -375,6 +386,10 @@ const filteredAndSortedData = useMemo(() => {
       <TableCell className="max-w-[250px] truncate text-sm text-gray-700" title={record.issue}>{record.issue}</TableCell>
       <TableCell className="max-w-[180px] truncate text-sm text-gray-700" title={record.customer}>{record.customer}</TableCell>
       <TableCell className="text-sm text-gray-700 font-semibold">{record.engineer}</TableCell>
+      <TableCell className="font-mono text-sm text-gray-700">
+  {record.replacementSN || "-"}
+</TableCell>
+
       <TableCell>
         {record.status && (
           <Badge
