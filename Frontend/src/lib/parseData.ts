@@ -107,34 +107,71 @@ export function getUniqueValues(records: ReplacementRecord[], field: keyof Repla
   return Array.from(values).sort();
 }
 
-export function getIssueCategories(records: ReplacementRecord[]): { name: string; count: number }[] {
-  const categories: Record<string, number> = {};
-  
-  records.forEach((record) => {
-    const issue = record.issue.toLowerCase();
-    let category = 'Other';
-    
-    if (issue.includes('mppt short') || issue.includes('mppt')) {
-      category = 'MPPT Short';
-    } else if (issue.includes('not turning on') || issue.includes('not turn on') || issue.includes('display off') || issue.includes('display blank')) {
-      category = 'Not Turning ON';
-    } else if (issue.includes('f39') || issue.includes('f35') || issue.includes('f19') || issue.includes('f24') || issue.includes('f55') || issue.includes('f64') || issue.includes('f33') || issue.includes('f18') || issue.includes('f10')) {
-      category = 'Error Codes';
-    } else if (issue.includes('not producing') || issue.includes('low production')) {
-      category = 'Low Production';
-    } else if (issue.includes('com') || issue.includes('logger') || issue.includes('ap not') || issue.includes('wifi')) {
-      category = 'Communication';
-    } else if (issue.includes('self check')) {
-      category = 'Self Check Error';
+export function getIssueCategories(
+  records: ReplacementRecord[]
+): { name: string; count: number }[] {
+
+  const categories: Record<string, number> = {
+    "MPPT Short": 0,
+    "F19": 0,
+    "F39": 0,
+    "Inverter Display off": 0,
+    "AP signal / Communication error": 0,
+    "F55": 0,
+    "Warning error": 0,
+    "F30": 0,
+    "F10": 0,
+    "Self check Repeat error": 0,
+  };
+
+  records.forEach(record => {
+    const issue = record.issue?.toLowerCase() || "";
+
+    if (issue.includes("mppt")) {
+      categories["MPPT Short"]++;
+
+    } else if (issue.includes("f19")) {
+      categories["F19"]++;
+
+    } else if (issue.includes("f39")) {
+      categories["F39"]++;
+
+    } else if (
+      issue.includes("display off") ||
+      issue.includes("display blank")
+    ) {
+      categories["Inverter Display off"]++;
+
+    } else if (
+      issue.includes("ap") ||
+      issue.includes("communication") ||
+      issue.includes("com")
+    ) {
+      categories["AP signal / Communication error"]++;
+
+    } else if (issue.includes("f55")) {
+      categories["F55"]++;
+
+    } else if (issue.includes("warning")) {
+      categories["Warning error"]++;
+
+    } else if (issue.includes("f30")) {
+      categories["F30"]++;
+
+    } else if (issue.includes("f10")) {
+      categories["F10"]++;
+
+    } else if (issue.includes("self check")) {
+      categories["Self check Repeat error"]++;
     }
-    
-    categories[category] = (categories[category] || 0) + 1;
   });
 
   return Object.entries(categories)
     .map(([name, count]) => ({ name, count }))
-    .sort((a, b) => b.count - a.count);
+    .filter(item => item.count > 0); // remove empty ones
 }
+
+
 
 export function getEngineerStats(records: ReplacementRecord[]): { name: string; count: number }[] {
   const stats: Record<string, number> = {};
