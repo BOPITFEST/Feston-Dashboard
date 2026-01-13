@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
-import { Zap, AlertTriangle, Wrench, Users } from "lucide-react";
-import { Package } from "lucide-react";
+import { Zap, AlertTriangle,CheckCircle, Users, PackageCheck} from "lucide-react";
+// import { Package } from "lucide-react";
 import { KPICard } from "@/components/dashboard/KPICard";
 import { DataTable } from "@/components/dashboard/DataTable";
 import { IssueChart } from "@/components/dashboard/IssueChart";
@@ -153,14 +153,14 @@ const stats = useMemo(() => {
   <KPICard
     title="Completed"
     value={stats.completed}
-    icon={Wrench}
+    icon={CheckCircle}
     iconClassName="bg-green-100 text-green-600"
   />
 
   <KPICard
     title="Spare Service"
     value={stats.spareService}
-    icon={Package}
+    icon={PackageCheck}
     iconClassName="bg-purple-100 text-purple-600"
   />
 
